@@ -1,11 +1,11 @@
 (ns snake.core
   (:use snake.grid))
 
-(def snake {:head [5 5] :tail (clojure.lang.PersistentQueue/EMPTY) :direction :south})
-
-(defn random-world [height width]
-  (let [snake-loc [(rand-int width) (rand-int height)] food-loc [(rand-int width) (rand-int height)]]
-    (if (= snake-loc food-loc) (random-world height width) {:head snake-loc :tail (clojure.lang.PersistentQueue/EMPTY) :direction :north :food food-loc})))
+(defn random-world [size]
+  "generate a new square grid with the snake and food placed randomly"
+  (let [snake-loc [(rand-int size) (rand-int size)] food-loc [(rand-int size) (rand-int size)]]
+    (if (= snake-loc food-loc) (random-world size)
+        {:head snake-loc :tail (clojure.lang.PersistentQueue/EMPTY) :direction :north :food food-loc :boundary size})))
 
 (defn face-food [world]
   (let [food-x (first (:food world)) snake-x (first (:head world)) 
