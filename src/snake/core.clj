@@ -14,7 +14,8 @@
      (> food-x snake-x) (assoc world :direction :east)
      (< food-x snake-x) (assoc world :direction :west)
      (> food-y snake-y) (assoc world :direction :north)
-     (< food-y snake-y) (assoc world :direction :south))))
+     (< food-y snake-y) (assoc world :direction :south)
+     true world)))
 
 ;; main loop:
 ;; 1). check for collisions
