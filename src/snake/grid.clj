@@ -5,10 +5,8 @@
 
 (defn valid? 
   "determine if a space is valid"
-  [grid [x y]]
-  (let [width  (count (first grid))
-        height (count grid)]
-    (and (>= x 0) (>= y 0) (< x width) (< y height))))
+  [size [x y]]
+  (and (>= x 0) (>= y 0) (< x size) (< y size)))
 
 (defn get-tile 
   "return the value of a square on a grid"

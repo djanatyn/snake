@@ -8,6 +8,7 @@
         {:head snake-loc :tail (clojure.lang.PersistentQueue/EMPTY) :direction :north :food food-loc :boundary size})))
 
 (defn face-food [world]
+  "make the snake face the food (prioritizes moving on the x axis arbitrarily)"
   (let [food-x (first (:food world)) snake-x (first (:head world)) 
         food-y (second (:food world)) snake-y (second (:head world))]
     (cond
@@ -16,6 +17,16 @@
      (> food-y snake-y) (assoc world :direction :north)
      (< food-y snake-y) (assoc world :direction :south)
      true world)))
+
+(defn tick [world]
+  (if (nil? world) nil (let [snake-x  (first (:head world)) snake-y (second (:head world))
+               new-head (case (:direction world)
+                          :east [(- snake-x 1) snake-y]
+                          :west [(- snake-x 1) snake-y]
+                          :north [snake-x (- snake-y 1)]
+                          :south [snake-x (+ snake-y 1)])]
+           (if (and (valid? (:boundary world) new-head) (not (.contains (:tail world) new-head)))
+             (assoc world :head new-head) nil))))
 
 ;; main loop:
 ;; 1). check for collisions
