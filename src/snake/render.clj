@@ -17,9 +17,9 @@
   (if (nil? world) nil
       (let [image (new BufferedImage (:size world) (:size world) (. BufferedImage TYPE_INT_RGB))]
         (clear-image! image) ;; clear the canvas
+        (set-color! image (:food world) (Color/red)) ;; paint the food
         (set-color! image (:head world) (Color/black)) ;; paint the head
         (doseq [tail-cell (:tail world)] (set-color! image tail-cell (Color/black))) ;; paint every tail cell
-        (set-color! image (:food world) (Color/red)) ;; paint the food
         image)))
 
 (defn write-file [image filename]
@@ -28,4 +28,4 @@
 
 (defn -main [& args]
   (let [timeline (iterate #(tick (face-food %)) (random-world 20))]
-    (doseq [n (range 50)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))
+    (doseq [n (range 100)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))

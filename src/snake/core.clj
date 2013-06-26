@@ -36,7 +36,11 @@
                        :north [snake-x (+ snake-y 1)]
                        :south [snake-x (- snake-y 1)])]
         (if (and (valid? (:size world) new-head) (not (.contains (:tail world) new-head)))
-          (assoc world :head new-head :food new-food) nil))))
+          (assoc world
+            :head new-head
+            :food new-food
+            :tail (conj ((if (= (:head world) (:food world)) identity pop) (:tail world)) (:head world)))
+          nil))))
 
 ;; main loop:
 ;; 1). check for collisions
