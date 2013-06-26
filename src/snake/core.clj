@@ -29,7 +29,7 @@
          (< food-x snake-x) (turn world :west)
          (> food-y snake-y) (turn world :north)
          (< food-y snake-y) (turn world :south)
-         true world))))
+         true (turn world (:direction world))))))
 
 (defn move-food [world]
   "move the food after the snake collects it"
