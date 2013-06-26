@@ -13,12 +13,8 @@
   [grid [x y]]
   (nth (nth grid y) x))
 
-(defn neighbors
-  "return the coordinates of all adjacent tiles"
-  [grid [x y]]
-  (let [delta-spaces [[-1 1] [0 1] [1 1] [-1 0] [1 0] [-1 -1] [0 -1] [1 -1]]
-        surroundings (map #(map + [x y] %) delta-spaces)]
-    (map #(get-tile grid %) (filter (partial valid? grid) surroundings))))
+(defn adjacent [world direction]
+  (map + (case direction :east [1 0] :west [-1 0] :north [0 1] :south [0 -1]) (:head world)))
 
 (defn coords
   "return all the possible coordinates with a certain width and height"
