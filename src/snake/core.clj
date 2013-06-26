@@ -9,15 +9,13 @@
 
 (defn turn
   "attempt to turn in a certain direction. if you can't, try going somewhere else"
-  [world direction]
-  (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 1] :south [0 -1]) (:head world))]
-    (if (valid? world space-to-move)
-      (assoc world :direction direction)
-      (turn world (case direction
-         :west :north
-         :north :east
-         :east :south
-         :south :west)))))
+  ([world direction] (turn world direction [:west :north :east :south]))
+  ([world direction directions-left]
+     (if (empty? directions-left) nil
+       (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 1] :south [0 -1]) (:head world))]
+         (if (valid? world space-to-move)
+           (assoc world :direction direction)
+           (turn world (first directions-left) (rest directions-left)))))))
 
 (defn face-food [world]
   "make the snake face the food (prioritizes moving on the x axis arbitrarily)"
