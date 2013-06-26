@@ -27,5 +27,5 @@
       (ImageIO/write image "png" (new File filename))))
 
 (defn -main [& args]
-  (let [timeline (iterate #(tick (face-food %)) (random-world 30))]
-    (doseq [n (range 9999)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))
+  (let [timeline (run-snake 20)]
+    (doseq [n (count timeline)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))
