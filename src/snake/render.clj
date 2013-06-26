@@ -14,15 +14,17 @@
     (.setRGB image x y (.getRGB (Color/white))))) 
 
 (defn world->image [world]
-  (let [image (new BufferedImage (:size world) (:size world) (. BufferedImage TYPE_INT_RGB))]
+  (if (nil? world) nil
+      (let [image (new BufferedImage (:size world) (:size world) (. BufferedImage TYPE_INT_RGB))]
         (clear-image! image) ;; clear the canvas
         (set-color! image (:head world) (Color/black)) ;; paint the head
         (doseq [tail-cell (:tail world)] (set-color! image tail-cell (Color/black))) ;; paint every tail cell
         (set-color! image (:food world) (Color/red)) ;; paint the food
-        image))
+        image)))
 
 (defn write-file [image filename]
-  (ImageIO/write image "png" (new File filename)))
+  (if (nil? image) nil
+      (ImageIO/write image "png" (new File filename))))
 
 (defn -main [& args]
   (let [timeline (iterate #(tick (face-food %)) (random-world 20))]
