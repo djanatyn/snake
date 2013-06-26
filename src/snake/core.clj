@@ -13,7 +13,11 @@
   (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 -1] :south [0 1]) (:head world))]
     (if (valid? world space-to-move)
       (assoc world :direction direction)
-      (turn world (rand-nth (remove #(= % direction) [:north :south :east :west]))))))
+      (turn world (case direction
+         :west :north
+         :north :east
+         :east :south
+         :south :west)))))
 
 (defn face-food [world]
   "make the snake face the food (prioritizes moving on the x axis arbitrarily)"
@@ -30,7 +34,7 @@
 (defn move-food [world]
   "move the food after the snake collects it"
   (let [new-food [(rand-int (:size world)) (rand-int (:size world))]]
-    (if (valid? world new-food)
+    (if (and (valid? world new-food) (not (= new-food (:head world))))
       (assoc world :food new-food)
       (move-food world))))
 

@@ -7,8 +7,7 @@
   "determine if a space is valid"
   [world [x y]]
   (and (>= x 0) (>= y 0) (< x (:size world)) (< y (:size world))
-       (not (.contains (:tail world) [x y]))
-       (not (= (:head world) [x y]))))
+       (not (.contains (:tail world) [x y]))))
 
 (defn get-tile 
   "return the value of a square on a grid"
