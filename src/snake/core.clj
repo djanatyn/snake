@@ -43,11 +43,3 @@
              :head new-head
              :tail (conj ((if new-food? identity pop) (:tail world)) (:head world))))
           nil))))
-
-;; main loop:
-;; 1). check for collisions
-;; 2). if there is a collision, flip out...
-;; 3). ...unless it's food. in that case, make the food the head of the body
-;; 4). generate a new food if the food is gone
-;; 5). if you're not on food, remove the oldest part of the tail
-;; 6). the head becomes the new block
