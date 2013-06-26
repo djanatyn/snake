@@ -28,4 +28,5 @@
 
 (defn -main [& args]
   (let [timeline (run-snake 20)]
-    (doseq [n (count timeline)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))
+    (doseq [n (range (count timeline))] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))
+    (print "rendered" (count timeline) "iterations")))
