@@ -28,4 +28,4 @@
 
 (defn -main [& args]
   (let [timeline (iterate #(tick (face-food %)) (random-world 20))]
-    (doseq [n (range 100)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))
+    (doseq [n (range 1000)] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))))

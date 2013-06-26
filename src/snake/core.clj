@@ -23,23 +23,25 @@
   "move the food after the snake collects it"
   (let [new-food [(rand-int (:size world)) (rand-int (:size world))]]
     (if (and (not (.contains (:tail world) new-food)) (not (= new-food (:head world))))
-      new-food
+      (assoc world :food new-food)
       (move-food world))))
 
 (defn tick [world]
   (if (nil? world) nil
       (let [snake-x  (first (:head world)) snake-y (second (:head world))
-            new-food (if (= (:head world) (:food world)) (move-food world) (:food world))
+            ;; do we need to generate a grid with new food?
+            new-food? (= (:head world) (:food world))      
             new-head (case (:direction world)
                        :east [(+ snake-x 1) snake-y]
                        :west [(- snake-x 1) snake-y]
                        :north [snake-x (+ snake-y 1)]
                        :south [snake-x (- snake-y 1)])]
-        (if (and (valid? (:size world) new-head) (not (.contains (:tail world) new-head)))
-          (assoc world
-            :head new-head
-            :food new-food
-            :tail (conj ((if (= (:head world) (:food world)) identity pop) (:tail world)) (:head world)))
+        (if (and (valid? (:size world) new-head)
+                 (not (.contains (:tail world) new-head)))
+          ((if new-food? move-food identity)
+           (assoc world
+             :head new-head
+             :tail (conj ((if new-food? identity pop) (:tail world)) (:head world))))
           nil))))
 
 ;; main loop:
