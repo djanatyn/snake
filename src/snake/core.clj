@@ -7,37 +7,38 @@
     (if (= snake-loc food-loc) (random-world size)
         {:head snake-loc :tail (clojure.lang.PersistentQueue/EMPTY) :direction :north :food food-loc :size size})))
 
+(defn turn
+  "attempt to turn in a certain direction. if you can't, uhh, turn in a random direction please"
+  [world direction]
+  (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 -1] :south [0 1]) (:head world))]
+    (if (valid? world space-to-move)
+      (assoc world :direction direction)
+      (turn world (rand-nth (remove #(= % direction) [:north :south :east :west]))))))
+
 (defn face-food [world]
   "make the snake face the food (prioritizes moving on the x axis arbitrarily)"
   (if (nil? world) nil
       (let [food-x (first (:food world)) snake-x (first (:head world)) 
             food-y (second (:food world)) snake-y (second (:head world))]
         (cond
-         (> food-x snake-x) (assoc world :direction :east)
-         (< food-x snake-x) (assoc world :direction :west)
-         (> food-y snake-y) (assoc world :direction :north)
-         (< food-y snake-y) (assoc world :direction :south)
+         (> food-x snake-x) (turn world :east)
+         (< food-x snake-x) (turn world :west)
+         (> food-y snake-y) (turn world :north)
+         (< food-y snake-y) (turn world :south)
          true world))))
 
 (defn move-food [world]
   "move the food after the snake collects it"
   (let [new-food [(rand-int (:size world)) (rand-int (:size world))]]
-    (if (and (not (.contains (:tail world) new-food)) (not (= new-food (:head world))))
+    (if (valid? world new-food)
       (assoc world :food new-food)
       (move-food world))))
 
 (defn tick [world]
   (if (nil? world) nil
-      (let [snake-x  (first (:head world)) snake-y (second (:head world))
-            ;; do we need to generate a grid with new food?
-            new-food? (= (:head world) (:food world))      
-            new-head (case (:direction world)
-                       :east [(+ snake-x 1) snake-y]
-                       :west [(- snake-x 1) snake-y]
-                       :north [snake-x (+ snake-y 1)]
-                       :south [snake-x (- snake-y 1)])]
-        (if (and (valid? (:size world) new-head)
-                 (not (.contains (:tail world) new-head)))
+      (let [new-food? (= (:head world) (:food world))
+            new-head (adjacent world (:direction world))]
+        (if (valid? world new-head)
           ((if new-food? move-food identity)
            (assoc world
              :head new-head
