@@ -8,7 +8,7 @@
         {:head snake-loc :tail (clojure.lang.PersistentQueue/EMPTY) :direction :north :food food-loc :size size})))
 
 (defn turn
-  "attempt to turn in a certain direction. if you can't, uhh, turn in a random direction please"
+  "attempt to turn in a certain direction. if you can't, try going somewhere else"
   [world direction]
   (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 1] :south [0 -1]) (:head world))]
     (if (valid? world space-to-move)
@@ -48,3 +48,8 @@
              :head new-head
              :tail (conj ((if new-food? identity pop) (:tail world)) (:head world))))
           nil))))
+
+(defn run-snake
+  "let the snake run until it dies"
+  [size]
+  (take-while (comp not nil?) (iterate #(tick (face-food %)) (random-world size))))
