@@ -9,7 +9,7 @@
 
 (defn turn
   "attempt to turn in a certain direction. if you can't, try going somewhere else"
-  ([world direction] (turn world direction [:west :north :east :south]))
+  ([world direction] (turn world direction (remove (partial = direction) (shuffle [:west :north :east :south]))))
   ([world direction directions-left]
      (if (empty? directions-left) nil
        (let [space-to-move (map + (case direction :east [1 0] :west [-1 0] :north [0 1] :south [0 -1]) (:head world))]
