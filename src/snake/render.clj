@@ -27,6 +27,7 @@
       (ImageIO/write image "png" (new File filename))))
 
 (defn -main [& args]
-  (let [timeline (run-snake 20)]
+  (if (empty? args) (throw (Exception. "please specify the size of the grid")))
+  (let [timeline (run-snake (read-string (first args)))]
     (doseq [n (range (count timeline))] (write-file (world->image (nth timeline n)) (str "out/gen" n ".png")))
-    (print "rendered" (count timeline) "iterations")))
+    (print "rendered" (count timeline) "iterations\n")))
